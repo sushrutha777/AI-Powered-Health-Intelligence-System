@@ -116,7 +116,9 @@ class ChatService:
             messages=[
                 ChatMessageItem(
                     id=m.id, role=m.role.value, content=m.content,
-                    sources=[SourceCitation(**s) for s in m.sources] if m.sources else None,
+                    sources=[
+                        SourceCitation(**s) for s in m.sources if isinstance(s, dict)
+                    ] if m.sources else None,
                     created_at=m.created_at,
                 )
                 for m in messages

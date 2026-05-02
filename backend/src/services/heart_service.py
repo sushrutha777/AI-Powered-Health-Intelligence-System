@@ -50,7 +50,7 @@ _model: Any = None
 _model_version: str | None = None
 
 
-def _encode_features(data: HeartDiseaseInput) -> np.ndarray:
+def _encode_features(data: HeartDiseaseInput) -> "np.ndarray[Any, np.dtype[np.float32]]":
     return np.array([[
         data.age, data.sex, CHEST_PAIN_MAP[data.chest_pain_type],
         data.resting_bp, data.cholesterol, data.fasting_bs,

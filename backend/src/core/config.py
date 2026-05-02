@@ -63,8 +63,9 @@ class Settings(BaseSettings):
             return [origin.strip() for origin in v.split(",")]
         if isinstance(v, str):
             import json
-            return json.loads(v)
-        return v
+            parsed: list[str] = [str(item) for item in json.loads(v)]
+            return parsed
+        return [str(item) for item in v]
 
     @property
     def is_production(self) -> bool:

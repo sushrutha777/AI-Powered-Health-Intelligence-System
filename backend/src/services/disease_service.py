@@ -110,7 +110,7 @@ _model: Any = None
 _model_version: str | None = None
 
 
-def _encode_symptoms(symptoms: list[str]) -> np.ndarray:
+def _encode_symptoms(symptoms: list[str]) -> "np.ndarray[Any, np.dtype[np.float32]]":
     """Encode symptom names into a binary feature vector."""
     vector = np.zeros(len(SYMPTOM_LIST), dtype=np.float32)
     symptom_index = {s: i for i, s in enumerate(SYMPTOM_LIST)}

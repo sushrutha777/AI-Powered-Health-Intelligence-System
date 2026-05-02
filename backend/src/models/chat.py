@@ -6,6 +6,7 @@ including message content, role, and source citations.
 """
 
 import enum
+from typing import Any
 
 from sqlalchemy import Enum as SAEnum
 from sqlalchemy import ForeignKey, String, Text
@@ -83,7 +84,7 @@ class ChatMessage(UUIDMixin, TimestampMixin, Base):
         Text,
         nullable=False,
     )
-    sources: Mapped[dict | None] = mapped_column(
+    sources: Mapped[list[dict[str, Any]] | None] = mapped_column(
         JSONB,
         nullable=True,
     )

@@ -4,6 +4,7 @@ RAG pipeline — orchestrates retrieval, prompt construction, and generation.
 Implements the full Retrieval-Augmented Generation flow:
 query → FAISS retrieval → context assembly → LLM generation → response.
 """
+from typing import Any
 
 from src.core.logging import get_logger
 from src.schemas.chat import SourceCitation
@@ -35,7 +36,7 @@ If the context is insufficient, acknowledge this and provide general guidance.
 Always recommend consulting a healthcare professional."""
 
 
-def _build_prompt(question: str, context_docs: list[dict]) -> str:
+def _build_prompt(question: str, context_docs: list[dict[str, Any]]) -> str:
     """Construct the full prompt with system instructions and retrieved context."""
     if context_docs:
         context_text = "\n\n".join(

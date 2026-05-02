@@ -7,6 +7,7 @@ prediction service powered by RandomForest.
 
 import uuid
 from datetime import datetime
+from typing import Any
 
 from pydantic import BaseModel, Field
 
@@ -57,8 +58,8 @@ class PredictionHistoryItem(BaseModel):
 
     id: uuid.UUID
     prediction_type: str
-    input_data: dict
-    result: dict
+    input_data: dict[str, Any]
+    result: dict[str, Any]
     confidence: float | None
     created_at: datetime
 

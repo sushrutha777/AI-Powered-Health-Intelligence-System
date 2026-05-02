@@ -53,7 +53,7 @@ class HuggingFaceLLMClient(BaseLLMClient):
                 result = response.json()
 
                 if isinstance(result, list) and len(result) > 0:
-                    return result[0].get("generated_text", "").strip()
+                    return str(result[0].get("generated_text", "")).strip()
                 return str(result)
 
             except httpx.HTTPStatusError as e:
@@ -96,7 +96,7 @@ class OpenAILLMClient(BaseLLMClient):
                 response = await client.post(self.api_url, headers=headers, json=payload)
                 response.raise_for_status()
                 result = response.json()
-                return result["choices"][0]["message"]["content"].strip()
+                return str(result["choices"][0]["message"]["content"]).strip()
             except Exception as e:
                 logger.error("openai_generation_error", error=str(e))
                 return "An error occurred while generating the response."

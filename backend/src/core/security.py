@@ -22,12 +22,12 @@ _pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def hash_password(plain_password: str) -> str:
     """Hash a plaintext password using bcrypt."""
-    return _pwd_context.hash(plain_password)
+    return str(_pwd_context.hash(plain_password))
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Verify a plaintext password against its bcrypt hash."""
-    return _pwd_context.verify(plain_password, hashed_password)
+    return bool(_pwd_context.verify(plain_password, hashed_password))
 
 
 # ── JWT Token Management ────────────────────────────────────────────
@@ -66,11 +66,11 @@ def create_access_token(
     if extra_claims:
         to_encode.update(extra_claims)
 
-    return jwt.encode(
+    return str(jwt.encode(
         to_encode,
         settings.JWT_SECRET_KEY,
         algorithm=settings.JWT_ALGORITHM,
-    )
+    ))
 
 
 def decode_access_token(token: str) -> dict[str, Any] | None:

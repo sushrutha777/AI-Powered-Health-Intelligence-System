@@ -6,6 +6,7 @@ with full input/output data for audit and history tracking.
 """
 
 import enum
+from typing import Any
 
 from sqlalchemy import Enum, Float, ForeignKey, String
 from sqlalchemy.dialects.postgresql import JSONB, UUID
@@ -43,11 +44,11 @@ class Prediction(UUIDMixin, TimestampMixin, Base):
         nullable=False,
         index=True,
     )
-    input_data: Mapped[dict] = mapped_column(
+    input_data: Mapped[dict[str, Any]] = mapped_column(
         JSONB,
         nullable=False,
     )
-    result: Mapped[dict] = mapped_column(
+    result: Mapped[dict[str, Any]] = mapped_column(
         JSONB,
         nullable=False,
     )
