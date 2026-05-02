@@ -6,7 +6,7 @@ handles chat session CRUD operations.
 """
 
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from sqlalchemy import delete, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -14,8 +14,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.core.logging import get_logger
 from src.models.chat import ChatMessage, ChatSession, MessageRole
 from src.schemas.chat import (
-    ChatHistoryResponse, ChatMessageInput, ChatMessageItem,
-    ChatMessageResponse, ChatSessionItem, ChatSessionListResponse,
+    ChatHistoryResponse,
+    ChatMessageInput,
+    ChatMessageItem,
+    ChatMessageResponse,
+    ChatSessionItem,
+    ChatSessionListResponse,
     SourceCitation,
 )
 from src.services.rag.rag_pipeline import generate_response
@@ -66,7 +70,7 @@ class ChatService:
         return ChatMessageResponse(
             session_id=session.id, message_id=assistant_msg.id,
             content=response_text, sources=sources,
-            timestamp=datetime.now(timezone.utc),
+            timestamp=datetime.now(UTC),
         )
 
     async def list_sessions(self, user_id: uuid.UUID) -> ChatSessionListResponse:

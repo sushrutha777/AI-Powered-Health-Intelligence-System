@@ -49,6 +49,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line
     fetchUser();
   }, [fetchUser]);
 

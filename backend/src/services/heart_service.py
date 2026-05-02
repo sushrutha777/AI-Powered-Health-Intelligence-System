@@ -6,7 +6,7 @@ risk categorization, and contributing factor extraction.
 """
 
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -17,8 +17,13 @@ from src.core.config import get_settings
 from src.core.logging import get_logger
 from src.models.prediction import Prediction, PredictionType
 from src.schemas.heart import (
-    ChestPainType, ContributingFactor, HeartDiseaseInput,
-    HeartDiseaseResponse, RestingECG, RiskLevel, STSlope,
+    ChestPainType,
+    ContributingFactor,
+    HeartDiseaseInput,
+    HeartDiseaseResponse,
+    RestingECG,
+    RiskLevel,
+    STSlope,
 )
 
 logger = get_logger(__name__)
@@ -34,7 +39,9 @@ ST_SLOPE_MAP = {STSlope.UPSLOPING: 0, STSlope.FLAT: 1, STSlope.DOWNSLOPING: 2}
 
 RISK_RECOMMENDATIONS = {
     RiskLevel.LOW: "Your heart disease risk appears low. Maintain a healthy lifestyle.",
-    RiskLevel.MODERATE: "Moderate risk. Schedule a cardiologist check-up and monitor BP/cholesterol.",
+    RiskLevel.MODERATE: (
+        "Moderate risk. Schedule a cardiologist check-up and monitor BP/cholesterol."
+    ),
     RiskLevel.HIGH: "Elevated risk detected. Consult a cardiologist for comprehensive evaluation.",
     RiskLevel.CRITICAL: "Critical indicators found. Seek immediate medical attention.",
 }
@@ -53,9 +60,12 @@ def _encode_features(data: HeartDiseaseInput) -> np.ndarray:
 
 
 def _categorize_risk(score: float) -> RiskLevel:
-    if score < 0.25: return RiskLevel.LOW
-    if score < 0.50: return RiskLevel.MODERATE
-    if score < 0.75: return RiskLevel.HIGH
+    if score < 0.25:
+        return RiskLevel.LOW
+    if score < 0.50:
+        return RiskLevel.MODERATE
+    if score < 0.75:
+        return RiskLevel.HIGH
     return RiskLevel.CRITICAL
 
 
@@ -65,10 +75,12 @@ def _extract_contributing_factors(data: HeartDiseaseInput) -> list[ContributingF
         factors.append(ContributingFactor(factor="Age", impact=min(data.age/120, 1.0),
             detail=f"Age {data.age} increases cardiovascular risk."))
     if data.cholesterol > 240:
-        factors.append(ContributingFactor(factor="Cholesterol", impact=min(data.cholesterol/600, 1.0),
+        impact = min(data.cholesterol / 600, 1.0)
+        factors.append(ContributingFactor(factor="Cholesterol", impact=impact,
             detail=f"Cholesterol {data.cholesterol} mg/dl is above recommended."))
     if data.resting_bp > 140:
-        factors.append(ContributingFactor(factor="Blood Pressure", impact=min(data.resting_bp/250, 1.0),
+        impact = min(data.resting_bp / 250, 1.0)
+        factors.append(ContributingFactor(factor="Blood Pressure", impact=impact,
             detail=f"Resting BP {data.resting_bp} mmHg indicates hypertension."))
     if data.exercise_angina == 1:
         factors.append(ContributingFactor(factor="Exercise Angina", impact=0.8,
@@ -82,16 +94,26 @@ def _extract_contributing_factors(data: HeartDiseaseInput) -> list[ContributingF
 
 def _heuristic_risk_score(data: HeartDiseaseInput) -> float:
     score = 0.0
-    if data.age > 55: score += 0.15
-    elif data.age > 45: score += 0.08
-    if data.sex == 1: score += 0.05
-    if data.cholesterol > 240: score += 0.15
-    elif data.cholesterol > 200: score += 0.08
-    if data.resting_bp > 140: score += 0.12
-    if data.exercise_angina == 1: score += 0.15
-    if data.fasting_bs == 1: score += 0.08
-    if data.st_slope == STSlope.DOWNSLOPING: score += 0.12
-    if data.oldpeak > 2.0: score += 0.10
+    if data.age > 55:
+        score += 0.15
+    elif data.age > 45:
+        score += 0.08
+    if data.sex == 1:
+        score += 0.05
+    if data.cholesterol > 240:
+        score += 0.15
+    elif data.cholesterol > 200:
+        score += 0.08
+    if data.resting_bp > 140:
+        score += 0.12
+    if data.exercise_angina == 1:
+        score += 0.15
+    if data.fasting_bs == 1:
+        score += 0.08
+    if data.st_slope == STSlope.DOWNSLOPING:
+        score += 0.12
+    if data.oldpeak > 2.0:
+        score += 0.10
     return min(score, 1.0)
 
 
@@ -152,5 +174,5 @@ async def assess_heart_risk(
         prediction_id=prediction.id, risk_score=risk_score,
         risk_level=risk_level, contributing_factors=contributing_factors,
         recommendation=RISK_RECOMMENDATIONS[risk_level],
-        model_version=_model_version, timestamp=datetime.now(timezone.utc),
+        model_version=_model_version, timestamp=datetime.now(UTC),
     )

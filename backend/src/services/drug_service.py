@@ -11,7 +11,9 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 from src.core.logging import get_logger
 from src.schemas.drug import (
-    DrugRecommendation, DrugRecommendationInput, DrugRecommendationResponse,
+    DrugRecommendation,
+    DrugRecommendationInput,
+    DrugRecommendationResponse,
 )
 
 logger = get_logger(__name__)

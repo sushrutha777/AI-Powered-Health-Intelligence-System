@@ -56,8 +56,9 @@ def build_index(documents: list[dict[str, str]]) -> None:
 
 def save_index(path: str | None = None) -> None:
     """Save FAISS index to disk."""
-    import faiss
     import json
+
+    import faiss
 
     if _index is None:
         raise RuntimeError("No index to save — call build_index first")
@@ -76,8 +77,9 @@ def save_index(path: str | None = None) -> None:
 def load_index(path: str | None = None) -> bool:
     """Load FAISS index from disk. Returns True if successful."""
     global _index, _documents
-    import faiss
     import json
+
+    import faiss
 
     settings = get_settings()
     load_path = Path(path or settings.FAISS_INDEX_PATH)
@@ -113,7 +115,7 @@ def search(query: str, top_k: int = 5) -> list[dict[str, Any]]:
     scores, indices = _index.search(query_embedding, min(top_k, len(_documents)))
 
     results = []
-    for score, idx in zip(scores[0], indices[0]):
+    for score, idx in zip(scores[0], indices[0], strict=False):
         if idx >= 0 and idx < len(_documents):
             results.append({
                 "title": _documents[idx].get("title", "Unknown"),

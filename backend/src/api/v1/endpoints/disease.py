@@ -12,7 +12,9 @@ from src.db.session import get_db
 from src.models.prediction import PredictionType
 from src.models.user import User
 from src.schemas.disease import (
-    DiseasePredictionResponse, DiseaseSymptomInput, PredictionHistoryResponse,
+    DiseasePredictionResponse,
+    DiseaseSymptomInput,
+    PredictionHistoryResponse,
 )
 from src.services.disease_service import get_prediction_history, predict_disease
 

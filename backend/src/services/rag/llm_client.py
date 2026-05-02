@@ -59,7 +59,10 @@ class HuggingFaceLLMClient(BaseLLMClient):
             except httpx.HTTPStatusError as e:
                 logger.error("llm_api_error", status=e.response.status_code,
                              detail=e.response.text[:200])
-                return "I apologize, but I'm unable to process your request right now. Please try again."
+                return (
+                    "I apologize, but I'm unable to process your request right now. "
+                    "Please try again."
+                )
             except Exception as e:
                 logger.error("llm_generation_error", error=str(e))
                 return "An error occurred while generating the response."

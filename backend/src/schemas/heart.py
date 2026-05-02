@@ -7,12 +7,12 @@ output schemas for risk categorization with contributing factors.
 
 import uuid
 from datetime import datetime
-from enum import Enum
+from enum import StrEnum
 
 from pydantic import BaseModel, Field
 
 
-class ChestPainType(str, Enum):
+class ChestPainType(StrEnum):
     """Types of chest pain for clinical classification."""
 
     TYPICAL_ANGINA = "typical_angina"
@@ -21,7 +21,7 @@ class ChestPainType(str, Enum):
     ASYMPTOMATIC = "asymptomatic"
 
 
-class RestingECG(str, Enum):
+class RestingECG(StrEnum):
     """Resting electrocardiogram results."""
 
     NORMAL = "normal"
@@ -29,7 +29,7 @@ class RestingECG(str, Enum):
     LV_HYPERTROPHY = "lv_hypertrophy"
 
 
-class STSlope(str, Enum):
+class STSlope(StrEnum):
     """ST segment slope during exercise."""
 
     UPSLOPING = "upsloping"
@@ -37,7 +37,7 @@ class STSlope(str, Enum):
     DOWNSLOPING = "downsloping"
 
 
-class RiskLevel(str, Enum):
+class RiskLevel(StrEnum):
     """Heart disease risk categorization."""
 
     LOW = "low"

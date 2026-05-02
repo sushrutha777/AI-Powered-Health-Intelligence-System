@@ -5,6 +5,8 @@ Stores conversation history for the RAG medical chatbot,
 including message content, role, and source citations.
 """
 
+import enum
+
 from sqlalchemy import Enum as SAEnum
 from sqlalchemy import ForeignKey, String, Text
 from sqlalchemy.dialects.postgresql import JSONB, UUID
@@ -12,10 +14,8 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.db.base import Base, TimestampMixin, UUIDMixin
 
-import enum
 
-
-class MessageRole(str, enum.Enum):
+class MessageRole(enum.StrEnum):
     """Role of a chat message sender."""
 
     USER = "user"

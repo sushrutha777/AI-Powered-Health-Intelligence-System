@@ -14,7 +14,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from src.db.base import Base, TimestampMixin, UUIDMixin
 
 
-class PredictionType(str, enum.Enum):
+class PredictionType(enum.StrEnum):
     """Enumeration of supported prediction types."""
 
     DISEASE = "disease"

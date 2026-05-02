@@ -7,7 +7,7 @@ prediction history management.
 """
 
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -245,7 +245,7 @@ async def predict_disease(
         primary_prediction=primary,
         differential_diagnoses=differentials,
         model_version=_model_version,
-        timestamp=datetime.now(timezone.utc),
+        timestamp=datetime.now(UTC),
     )
 
 

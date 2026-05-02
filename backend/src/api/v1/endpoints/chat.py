@@ -12,7 +12,9 @@ from src.api.deps import get_current_user
 from src.db.session import get_db
 from src.models.user import User
 from src.schemas.chat import (
-    ChatHistoryResponse, ChatMessageInput, ChatMessageResponse,
+    ChatHistoryResponse,
+    ChatMessageInput,
+    ChatMessageResponse,
     ChatSessionListResponse,
 )
 from src.services.chat_service import ChatService
@@ -35,7 +37,7 @@ async def send_message(
         service = ChatService(db)
         return await service.send_message(current_user.id, input_data)
     except ValueError as e:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
 
 
 @router.get(
@@ -67,7 +69,7 @@ async def get_session(
         service = ChatService(db)
         return await service.get_session_history(session_id, current_user.id)
     except ValueError as e:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
 
 
 @router.delete(

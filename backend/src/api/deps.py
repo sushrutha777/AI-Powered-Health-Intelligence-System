@@ -46,7 +46,7 @@ async def get_current_user(
     try:
         user_id = uuid.UUID(user_id_str)
     except ValueError:
-        raise credentials_exception
+        raise credentials_exception from None
 
     auth_service = AuthService(db)
     user = await auth_service.get_user_by_id(user_id)
