@@ -12,7 +12,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U healthai -d healthai_db"]
+      test: [ "CMD-SHELL", "pg_isready -U healthai -d healthai_db" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -50,11 +50,7 @@ services:
       MLFLOW_BACKEND_STORE_URI: postgresql://healthai:healthai_pass@db:5432/healthai_db
       MLFLOW_DEFAULT_ARTIFACT_ROOT: /mlflow/artifacts
     command: >
-      mlflow server
-      --host 0.0.0.0
-      --port 5000
-      --backend-store-uri postgresql://healthai:healthai_pass@db:5432/healthai_db
-      --default-artifact-root /mlflow/artifacts
+      mlflow server --host 0.0.0.0 --port 5000 --backend-store-uri postgresql://healthai:healthai_pass@db:5432/healthai_db --default-artifact-root /mlflow/artifacts
     ports:
       - "5000:5000"
     depends_on:
