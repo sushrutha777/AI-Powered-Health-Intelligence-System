@@ -1,6 +1,6 @@
 # 🏥 AI-Powered Health Intelligence System
 
-A production-grade, full-stack healthcare platform powered by AI — providing disease prediction, heart disease risk assessment, drug recommendations, and a RAG-based medical chatbot.
+A production-grade, full-stack healthcare platform powered by AI — providing disease prediction, drug recommendations, and a RAG-based medical chatbot.
 
 ![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688?logo=fastapi&logoColor=white)
@@ -16,7 +16,7 @@ A production-grade, full-stack healthcare platform powered by AI — providing d
 | Feature | Model / Tech | Endpoint |
 |---------|-------------|----------|
 | **Disease Prediction** | RandomForest (scikit-learn) | `POST /api/v1/disease/predict` |
-| **Heart Risk Assessment** | LightGBM | `POST /api/v1/heart/assess` |
+
 | **Drug Recommendations** | TF-IDF + Cosine Similarity | `POST /api/v1/drug/recommend` |
 | **Medical AI Chatbot** | RAG (FAISS + LLM) | `POST /api/v1/chat/message` |
 | **User Authentication** | JWT + bcrypt | `POST /api/v1/auth/login` |
@@ -30,7 +30,7 @@ Frontend (Next.js)  →  Backend (FastAPI)  →  PostgreSQL
                            ↓
                     ML Services Layer
                     ├── RandomForest (Disease)
-                    ├── LightGBM (Heart)
+
                     ├── TF-IDF (Drug Rec)
                     └── FAISS + LLM (RAG Chatbot)
                            ↓
@@ -136,8 +136,7 @@ cd backend
 # Train disease prediction model
 python -m ml.training.disease_trainer
 
-# Train heart disease model
-python -m ml.training.heart_trainer
+
 
 # Build FAISS vector index for RAG
 python -m ml.scripts.build_vector_index
@@ -151,7 +150,7 @@ python -m ml.scripts.build_vector_index
 - **Backend:** FastAPI, SQLAlchemy (async), Pydantic v2
 - **Database:** PostgreSQL 16
 - **Auth:** JWT (python-jose) + bcrypt
-- **ML:** scikit-learn, LightGBM, sentence-transformers, FAISS
+- **ML:** scikit-learn, sentence-transformers, FAISS
 - **LLM:** HuggingFace Inference API
 - **MLOps:** MLflow, Docker
 - **CI/CD:** GitHub Actions

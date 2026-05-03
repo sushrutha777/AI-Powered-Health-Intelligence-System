@@ -7,7 +7,6 @@ import { useEffect } from 'react';
 const NAV_ITEMS = [
   { href: '/dashboard', label: 'Dashboard', icon: '📊' },
   { href: '/dashboard/predict', label: 'Disease Prediction', icon: '🔬' },
-  { href: '/dashboard/heart', label: 'Heart Assessment', icon: '❤️' },
   { href: '/dashboard/drugs', label: 'Drug Recommendations', icon: '💊' },
   { href: '/dashboard/chat', label: 'AI Chatbot', icon: '🤖' },
   { href: '/dashboard/history', label: 'History', icon: '📋' },

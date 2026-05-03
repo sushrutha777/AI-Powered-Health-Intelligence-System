@@ -259,7 +259,7 @@ async def get_prediction_history(
     """
     Retrieve paginated prediction history for a user.
 
-    Optionally filters by prediction type (disease/heart).
+    Optionally filters by prediction type (disease).
     """
     query = select(Prediction).where(Prediction.user_id == user_id)
     count_query = select(func.count()).select_from(Prediction).where(

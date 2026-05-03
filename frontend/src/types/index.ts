@@ -49,38 +49,6 @@ export interface DiseasePredictionResponse {
   timestamp: string;
 }
 
-// ── Heart Disease ─────────────────────────────────────────────────
-
-export interface HeartDiseaseInput {
-  age: number;
-  sex: number;
-  chest_pain_type: string;
-  resting_bp: number;
-  cholesterol: number;
-  fasting_bs: number;
-  resting_ecg: string;
-  max_hr: number;
-  exercise_angina: number;
-  oldpeak: number;
-  st_slope: string;
-}
-
-export interface ContributingFactor {
-  factor: string;
-  impact: number;
-  detail: string;
-}
-
-export interface HeartDiseaseResponse {
-  prediction_id: string;
-  risk_score: number;
-  risk_level: 'low' | 'moderate' | 'high' | 'critical';
-  contributing_factors: ContributingFactor[];
-  recommendation: string;
-  model_version: string | null;
-  timestamp: string;
-}
-
 // ── Drug Recommendation ───────────────────────────────────────────
 
 export interface DrugRecommendationInput {

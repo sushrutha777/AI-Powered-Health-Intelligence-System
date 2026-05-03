@@ -27,7 +27,7 @@ dependencies = [
 
     # ML / AI
     "scikit-learn>=1.5.0",
-    "lightgbm>=4.5.0",
+
     "pandas>=2.2.0",
     "numpy>=1.26.0",
 
@@ -40,6 +40,13 @@ dependencies = [
 
     # MLflow
     "mlflow>=2.18.0",
+
+    # Langchain & RAG
+    "langchain>=0.3.0",
+    "langchain-community>=0.3.0",
+    "langchain-google-genai>=2.0.0",
+    "langchain-text-splitters>=0.3.0",
+    "pypdf>=5.1.0",
 
     # Logging
     "structlog>=24.4.0",

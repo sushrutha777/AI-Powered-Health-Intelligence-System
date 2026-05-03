@@ -73,11 +73,16 @@ docker-compose.override.yml
 *.pt
 *.pth
 *.onnx
+*.db
+*.csv
+*.zip
 mlruns/
 mlartifacts/
 backend/ml/models/*.pkl
 backend/ml/models/*.joblib
 backend/ml/data/knowledge_base/*.pdf
+backend/ml/data/*.csv
+backend/ml/data/*.zip
 !backend/ml/models/.gitkeep
 
 # ========================

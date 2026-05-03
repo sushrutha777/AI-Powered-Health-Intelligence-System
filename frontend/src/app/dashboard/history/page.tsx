@@ -5,7 +5,7 @@ import { api } from '@/lib/api';
 import type { PredictionHistoryItem } from '@/types';
 
 export default function HistoryPage() {
-  const [tab, setTab] = useState<'disease' | 'heart'>('disease');
+  const [tab, setTab] = useState<'disease'>('disease');
   const [predictions, setPredictions] = useState<PredictionHistoryItem[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -13,7 +13,7 @@ export default function HistoryPage() {
     const fetchHistory = async () => {
       setLoading(true);
       try {
-        const endpoint = tab === 'disease' ? '/api/v1/disease/history' : '/api/v1/heart/history';
+        const endpoint = '/api/v1/disease/history';
         const resp = await api.get<{ predictions: PredictionHistoryItem[] }>(endpoint);
         setPredictions(resp.predictions);
       } catch {
@@ -30,16 +30,14 @@ export default function HistoryPage() {
 
       {/* Tabs */}
       <div style={{ display: 'flex', gap: 4, marginBottom: 24, background: 'var(--bg-tertiary)', borderRadius: 10, padding: 4, width: 'fit-content' }}>
-        {(['disease', 'heart'] as const).map((t) => (
-          <button key={t} onClick={() => setTab(t)} style={{
-            padding: '10px 24px', borderRadius: 8, border: 'none', cursor: 'pointer',
-            fontFamily: 'var(--font-sans)', fontWeight: 600, fontSize: '0.9rem',
-            background: tab === t ? 'var(--accent-primary)' : 'transparent',
-            color: tab === t ? 'white' : 'var(--text-secondary)', transition: 'all 0.2s ease',
-          }}>
-            {t === 'disease' ? '🔬 Disease' : '❤️ Heart'}
-          </button>
-        ))}
+        <button onClick={() => setTab('disease')} style={{
+          padding: '10px 24px', borderRadius: 8, border: 'none', cursor: 'pointer',
+          fontFamily: 'var(--font-sans)', fontWeight: 600, fontSize: '0.9rem',
+          background: 'var(--accent-primary)',
+          color: 'white', transition: 'all 0.2s ease',
+        }}>
+          🔬 Disease
+        </button>
       </div>
 
       {/* Content */}
@@ -57,10 +55,7 @@ export default function HistoryPage() {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
                   <span style={{ fontWeight: 600, fontSize: '0.95rem' }}>
-                    {tab === 'disease'
-                      ? (p.result as { primary?: { disease?: string } })?.primary?.disease || 'Unknown'
-                      : `Risk: ${(p.result as { risk_level?: string })?.risk_level || 'N/A'}`
-                    }
+                    {(p.result as { primary?: { disease?: string } })?.primary?.disease || 'Unknown'}
                   </span>
                   <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: 4 }}>
                     {new Date(p.created_at).toLocaleDateString()} at {new Date(p.created_at).toLocaleTimeString()}

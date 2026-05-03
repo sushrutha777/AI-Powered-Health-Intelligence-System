@@ -38,18 +38,9 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     except Exception as e:
         logger.warning("disease_model_load_failed", error=str(e))
 
-    try:
-        from src.services.heart_service import load_heart_model
-        await load_heart_model()
-    except Exception as e:
-        logger.warning("heart_model_load_failed", error=str(e))
 
-    # Attempt to load FAISS index
-    try:
-        from src.services.rag.vector_store import load_index
-        load_index()
-    except Exception as e:
-        logger.warning("faiss_index_load_failed", error=str(e))
+
+
 
     logger.info("application_started")
 
@@ -68,8 +59,7 @@ def create_app() -> FastAPI:
         version=settings.APP_VERSION,
         description=(
             "AI-powered healthcare platform providing disease prediction, "
-            "heart disease risk assessment, drug recommendations, and "
-            "a RAG-based medical chatbot."
+            "drug recommendations, and a RAG-based medical chatbot."
         ),
         docs_url="/docs",
         redoc_url="/redoc",

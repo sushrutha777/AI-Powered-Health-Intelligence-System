@@ -5,7 +5,7 @@ import { AuthProvider } from "@/lib/auth";
 export const metadata: Metadata = {
   title: "Health Intelligence System — AI-Powered Healthcare Platform",
   description:
-    "Advanced AI healthcare platform providing disease prediction, heart disease risk assessment, drug recommendations, and an intelligent medical chatbot.",
+    "Advanced AI healthcare platform providing disease prediction, drug recommendations, and an intelligent medical chatbot.",
   keywords: ["healthcare", "AI", "disease prediction", "medical chatbot", "drug recommendation"],
 };
 

@@ -4,7 +4,6 @@ import { useAuth } from '@/lib/auth';
 
 const QUICK_ACTIONS = [
   { href: '/dashboard/predict', icon: '🔬', title: 'Predict Disease', desc: 'Analyze symptoms', gradient: 'linear-gradient(135deg, #06b6d4, #3b82f6)' },
-  { href: '/dashboard/heart', icon: '❤️', title: 'Heart Assessment', desc: 'Check heart risk', gradient: 'linear-gradient(135deg, #ef4444, #f59e0b)' },
   { href: '/dashboard/drugs', icon: '💊', title: 'Find Drugs', desc: 'Get recommendations', gradient: 'linear-gradient(135deg, #10b981, #06b6d4)' },
   { href: '/dashboard/chat', icon: '🤖', title: 'AI Chatbot', desc: 'Ask medical questions', gradient: 'linear-gradient(135deg, #8b5cf6, #ec4899)' },
 ];
@@ -28,7 +27,6 @@ export default function DashboardPage() {
       <div className="grid-cols-4" style={{ marginBottom: 40 }}>
         {[
           { label: 'Disease Predictions', value: '—', icon: '🔬', color: '#06b6d4' },
-          { label: 'Heart Assessments', value: '—', icon: '❤️', color: '#ef4444' },
           { label: 'Drug Searches', value: '—', icon: '💊', color: '#10b981' },
           { label: 'Chat Sessions', value: '—', icon: '💬', color: '#8b5cf6' },
         ].map((stat, idx) => (
@@ -79,7 +77,6 @@ export default function DashboardPage() {
           {[
             { name: 'API Server', status: 'Online', color: 'var(--accent-success)' },
             { name: 'Disease Model (RandomForest)', status: 'Ready', color: 'var(--accent-success)' },
-            { name: 'Heart Model (LightGBM)', status: 'Ready', color: 'var(--accent-success)' },
             { name: 'RAG Pipeline (FAISS + LLM)', status: 'Ready', color: 'var(--accent-success)' },
             { name: 'MLflow Tracking', status: 'Connected', color: 'var(--accent-success)' },
           ].map((service, idx) => (

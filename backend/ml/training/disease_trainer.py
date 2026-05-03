@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 def train_disease_model(
     data_path: str = "ml/data/disease_dataset.csv",
     output_path: str = "ml/models/disease_model.pkl",
-    mlflow_tracking_uri: str = "http://localhost:5000",
+    mlflow_tracking_uri: str = "sqlite:///mlflow.db",
 ) -> None:
     """
     Train a RandomForest disease prediction model.

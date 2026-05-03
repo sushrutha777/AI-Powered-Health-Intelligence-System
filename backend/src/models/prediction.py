@@ -1,7 +1,7 @@
 """
 Prediction ORM model.
 
-Stores disease prediction and heart risk assessment results
+Stores disease prediction results
 with full input/output data for audit and history tracking.
 """
 
@@ -19,16 +19,13 @@ class PredictionType(enum.StrEnum):
     """Enumeration of supported prediction types."""
 
     DISEASE = "disease"
-    HEART = "heart"
 
 
 class Prediction(UUIDMixin, TimestampMixin, Base):
     """
     Prediction history model.
 
-    Stores the input data, result, confidence, and metadata for
-    each prediction made by a user. Supports both disease predictions
-    and heart risk assessments via the prediction_type discriminator.
+    each prediction made by a user.
     """
 
     __tablename__ = "predictions"

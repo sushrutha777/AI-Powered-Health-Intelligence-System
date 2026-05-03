@@ -18,56 +18,50 @@ from src.schemas.drug import (
 
 logger = get_logger(__name__)
 
-# Placeholder drug database — replaced by real data loader in production
-_DRUG_DATABASE: list[dict[str, Any]] = [
-    {"name": "Metformin", "condition": "diabetes type 2", "rating": 7.5,
-     "review": "Effective for controlling blood sugar levels with minimal side effects.",
-     "side_effects": ["nausea", "diarrhea", "stomach upset"]},
-    {"name": "Lisinopril", "condition": "hypertension high blood pressure",
-     "rating": 8.0, "review": "Well-tolerated ACE inhibitor for blood pressure control.",
-     "side_effects": ["dry cough", "dizziness", "headache"]},
-    {"name": "Atorvastatin", "condition": "high cholesterol hyperlipidemia",
-     "rating": 8.2, "review": "Highly effective statin for cholesterol management.",
-     "side_effects": ["muscle pain", "digestive issues", "fatigue"]},
-    {"name": "Sertraline", "condition": "depression anxiety disorder",
-     "rating": 7.0, "review": "Common SSRI antidepressant with good efficacy.",
-     "side_effects": ["nausea", "insomnia", "dizziness", "dry mouth"]},
-    {"name": "Omeprazole", "condition": "acid reflux GERD gastroesophageal",
-     "rating": 8.5, "review": "Proton pump inhibitor effective for acid reflux.",
-     "side_effects": ["headache", "nausea", "abdominal pain"]},
-    {"name": "Amlodipine", "condition": "hypertension high blood pressure angina",
-     "rating": 7.8, "review": "Calcium channel blocker for hypertension and angina.",
-     "side_effects": ["edema", "dizziness", "flushing"]},
-    {"name": "Albuterol", "condition": "asthma bronchospasm breathing difficulty",
-     "rating": 8.3, "review": "Fast-acting bronchodilator for asthma relief.",
-     "side_effects": ["tremor", "nervousness", "headache"]},
-    {"name": "Levothyroxine", "condition": "hypothyroidism thyroid underactive",
-     "rating": 7.9, "review": "Standard thyroid hormone replacement therapy.",
-     "side_effects": ["weight changes", "insomnia", "tremor"]},
-    {"name": "Ibuprofen", "condition": "pain inflammation fever arthritis",
-     "rating": 7.2, "review": "NSAID for pain relief and inflammation reduction.",
-     "side_effects": ["stomach upset", "heartburn", "dizziness"]},
-    {"name": "Amoxicillin", "condition": "bacterial infection pneumonia bronchitis",
-     "rating": 7.6, "review": "Broad-spectrum antibiotic for bacterial infections.",
-     "side_effects": ["diarrhea", "rash", "nausea"]},
-]
+import pandas as pd
+from pathlib import Path
 
+_DRUG_DATABASE: list[dict[str, Any]] = []
 _vectorizer: TfidfVectorizer | None = None
 _tfidf_matrix: Any = None
 _is_initialized = False
 
-
 def _initialize_engine() -> None:
-    """Build TF-IDF matrix from drug database."""
-    global _vectorizer, _tfidf_matrix, _is_initialized
+    """Load drug dataset from CSV and build TF-IDF matrix."""
+    global _DRUG_DATABASE, _vectorizer, _tfidf_matrix, _is_initialized
 
     if _is_initialized:
         return
 
-    corpus = [
-        f"{drug['condition']} {drug.get('review', '')}"
-        for drug in _DRUG_DATABASE
-    ]
+    csv_path = Path("ml/data/drug_dataset.csv")
+    if not csv_path.exists():
+        logger.warning("drug_dataset_missing", path=str(csv_path))
+        return
+
+    df = pd.read_csv(csv_path)
+    # Take a sample to keep memory usage low (e.g., 20000 rows)
+    # df = df.sample(n=min(len(df), 20000), random_state=42).reset_index(drop=True)
+    # The dataset might be large, but TF-IDF on 160k rows with max_features=5000 is usually fine.
+    
+    # Pre-build our database structure
+    _DRUG_DATABASE = []
+    corpus = []
+    
+    for _, row in df.iterrows():
+        condition = str(row.get('condition', ''))
+        review = str(row.get('review', ''))
+        drug_name = str(row.get('drugName', ''))
+        rating = row.get('rating', None)
+        rating = float(rating) if not pd.isna(rating) else None
+        
+        _DRUG_DATABASE.append({
+            "name": drug_name,
+            "condition": condition,
+            "rating": rating,
+            "review": review[:200] + "..." if len(review) > 200 else review,
+            "side_effects": [] # Dataset doesn't explicitly list side effects, we could extract from reviews but will leave empty for now
+        })
+        corpus.append(f"{condition} {review}")
 
     _vectorizer = TfidfVectorizer(stop_words="english", max_features=5000)
     _tfidf_matrix = _vectorizer.fit_transform(corpus)

@@ -22,7 +22,6 @@ from src.schemas.chat import (
     ChatSessionListResponse,
     SourceCitation,
 )
-from src.services.rag.rag_pipeline import generate_response
 
 logger = get_logger(__name__)
 
@@ -52,14 +51,23 @@ class ChatService:
         )
         self.db.add(user_msg)
 
-        # Generate RAG response
-        response_text, sources = await generate_response(input_data.message)
+        # Generate RAG response using new Gemini pipeline
+        try:
+            from src.services.rag.gemini_medical_rag import ask_medical_question
+            # We don't have citations from the new pure langchain pipeline easily exposed in the return type, 
+            # so we'll just return the response string and empty sources for now.
+            response_text = ask_medical_question(input_data.message, "faiss_medical_index")
+            sources = []
+        except Exception as e:
+            logger.error("gemini_rag_error", error=str(e))
+            response_text = "I am currently unable to process your request. Please ensure the Gemini API key is configured and the FAISS index exists."
+            sources = []
 
         # Save assistant message
         assistant_msg = ChatMessage(
             session_id=session.id, role=MessageRole.ASSISTANT,
             content=response_text,
-            sources=[s.model_dump() for s in sources] if sources else None,
+            sources=None,
         )
         self.db.add(assistant_msg)
         await self.db.flush()

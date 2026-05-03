@@ -12,12 +12,6 @@ const FEATURES = [
     gradient: 'linear-gradient(135deg, #06b6d4, #3b82f6)',
   },
   {
-    icon: '❤️',
-    title: 'Heart Risk Assessment',
-    description: 'Clinical-grade heart disease risk scoring using LightGBM with contributing factor analysis.',
-    gradient: 'linear-gradient(135deg, #ef4444, #f59e0b)',
-  },
-  {
     icon: '💊',
     title: 'Drug Recommendations',
     description: 'NLP-based drug matching using TF-IDF and cosine similarity for personalized recommendations.',
@@ -87,7 +81,7 @@ export default function LandingPage() {
             fontSize: '1.2rem', color: 'var(--text-secondary)',
             maxWidth: 600, margin: '0 auto 40px', lineHeight: 1.7,
           }}>
-            Advanced machine learning models for disease prediction, heart risk assessment,
+            Advanced machine learning models for disease prediction,
             drug recommendations, and an intelligent medical chatbot — all in one platform.
           </p>
           <div style={{ display: 'flex', justifyContent: 'center', gap: 16 }}>
