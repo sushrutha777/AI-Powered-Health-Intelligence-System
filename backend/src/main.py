@@ -21,7 +21,7 @@ logger = get_logger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     """Application lifecycle — startup and shutdown events."""
-    # ── Startup ──────────────────────────────────────────────────
+    # Startup Tasks
     setup_logging()
     settings = get_settings()
     logger.info(
@@ -46,7 +46,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
 
     yield
 
-    # ── Shutdown ─────────────────────────────────────────────────
+    # Shutdown Tasks
     logger.info("application_shutting_down")
 
 
@@ -67,7 +67,7 @@ def create_app() -> FastAPI:
         lifespan=lifespan,
     )
 
-    # ── CORS Middleware ──────────────────────────────────────────
+    # CORS Middleware
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.BACKEND_CORS_ORIGINS,
@@ -76,10 +76,10 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
 
-    # ── Routers ──────────────────────────────────────────────────
+    # API Routers
     app.include_router(api_v1_router)
 
-    # ── Health Check ─────────────────────────────────────────────
+    # Health Check Endpoint
     @app.get("/health", tags=["Health"])
     async def health_check() -> dict[str, str]:
         """Application health check endpoint."""

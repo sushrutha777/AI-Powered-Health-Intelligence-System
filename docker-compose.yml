@@ -1,5 +1,5 @@
 services:
-  # ── PostgreSQL Database ────────────────────────────────────────
+  # PostgreSQL Database Service
   db:
     image: postgres:16-alpine
     container_name: healthai-db
@@ -17,7 +17,7 @@ services:
       timeout: 5s
       retries: 5
 
-  # ── FastAPI Backend ────────────────────────────────────────────
+  # FastAPI Backend Service
   backend:
     build:
       context: ./backend
@@ -42,7 +42,7 @@ services:
       - ./backend/ml/models:/app/ml/models
     restart: unless-stopped
 
-  # ── MLflow Tracking Server ─────────────────────────────────────
+  # MLflow Tracking Server
   mlflow:
     image: ghcr.io/mlflow/mlflow:v2.18.0
     container_name: healthai-mlflow

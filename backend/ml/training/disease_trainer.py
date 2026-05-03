@@ -36,7 +36,7 @@ def train_disease_model(
     """
     logger.info("Loading dataset from %s", data_path)
 
-    # ── Load Data ────────────────────────────────────────────────
+    # Load Data
     # Expected CSV format: columns are symptoms (binary 0/1),
     # last column is 'prognosis' (disease label)
     df = pd.read_csv(data_path)
@@ -49,12 +49,12 @@ def train_disease_model(
     label_encoder = LabelEncoder()
     y_encoded = label_encoder.fit_transform(y)
 
-    # ── Split ────────────────────────────────────────────────────
+    # Split Data
     X_train, X_test, y_train, y_test = train_test_split(
         X, y_encoded, test_size=0.2, random_state=42, stratify=y_encoded,
     )
 
-    # ── Train ────────────────────────────────────────────────────
+    # Train Model
     mlflow.set_tracking_uri(mlflow_tracking_uri)
     mlflow.set_experiment("disease_prediction")
 
@@ -70,7 +70,7 @@ def train_disease_model(
 
         model.fit(X_train, y_train)
 
-        # ── Evaluate ─────────────────────────────────────────────
+        # Evaluate Model
         train_acc = model.score(X_train, y_train)
         test_acc = model.score(X_test, y_test)
         cv_scores = cross_val_score(model, X, y_encoded, cv=5)
@@ -79,7 +79,7 @@ def train_disease_model(
         logger.info("Test accuracy: %.4f", test_acc)
         logger.info("CV mean accuracy: %.4f (+/- %.4f)", cv_scores.mean(), cv_scores.std())
 
-        # ── Log to MLflow ────────────────────────────────────────
+        # Log to MLflow
         mlflow.log_params({
             "n_estimators": 200,
             "max_depth": 20,
@@ -100,7 +100,7 @@ def train_disease_model(
             registered_model_name="disease_predictor",
         )
 
-        # ── Save Local Artifact ──────────────────────────────────
+        # Save Local Artifacts
         output = Path(output_path)
         output.parent.mkdir(parents=True, exist_ok=True)
         joblib.dump(model, output)
