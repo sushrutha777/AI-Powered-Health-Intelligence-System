@@ -114,7 +114,7 @@ Copy `backend/.env.example` to `backend/.env` and fill in:
 |----------|-------------|
 | `DATABASE_URL` | PostgreSQL async connection string |
 | `JWT_SECRET_KEY` | Secret key for JWT signing |
-| `HUGGINGFACE_API_KEY` | HuggingFace API key for RAG chatbot |
+| `GOOGLE_API_KEY` | Google Gemini API key for RAG chatbot |
 | `MLFLOW_TRACKING_URI` | MLflow tracking server URL |
 
 ---
@@ -151,7 +151,7 @@ python -m ml.scripts.build_vector_index
 - **Database:** PostgreSQL 16
 - **Auth:** JWT (python-jose) + bcrypt
 - **ML:** scikit-learn, sentence-transformers, FAISS
-- **LLM:** HuggingFace Inference API
+- **LLM:** Google Gemini (embeddings + generation)
 - **MLOps:** MLflow, Docker
 - **CI/CD:** GitHub Actions
 

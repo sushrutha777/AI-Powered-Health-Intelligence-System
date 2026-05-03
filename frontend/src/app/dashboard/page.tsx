@@ -1,6 +1,13 @@
 'use client';
 
 import { useAuth } from '@/lib/auth';
+import { api } from '@/lib/api';
+import { useEffect, useState } from 'react';
+
+interface DashboardStats {
+  disease_predictions: number;
+  chat_sessions: number;
+}
 
 const QUICK_ACTIONS = [
   { href: '/dashboard/predict', icon: '🔬', title: 'Predict Disease', desc: 'Analyze symptoms', gradient: 'linear-gradient(135deg, #06b6d4, #3b82f6)' },
@@ -10,6 +17,20 @@ const QUICK_ACTIONS = [
 
 export default function DashboardPage() {
   const { user } = useAuth();
+  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [apiOnline, setApiOnline] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    // Fetch real dashboard stats
+    api.get<DashboardStats>('/api/v1/dashboard/stats')
+      .then(setStats)
+      .catch(() => setStats(null));
+
+    // Check API health
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/health`)
+      .then((r) => setApiOnline(r.ok))
+      .catch(() => setApiOnline(false));
+  }, []);
 
   return (
     <div className="animate-fade-in">
@@ -26,9 +47,8 @@ export default function DashboardPage() {
       {/* Stats Overview */}
       <div className="grid-cols-4" style={{ marginBottom: 40 }}>
         {[
-          { label: 'Disease Predictions', value: '—', icon: '🔬', color: '#06b6d4' },
-          { label: 'Drug Searches', value: '—', icon: '💊', color: '#10b981' },
-          { label: 'Chat Sessions', value: '—', icon: '💬', color: '#8b5cf6' },
+          { label: 'Disease Predictions', value: stats?.disease_predictions ?? '—', icon: '🔬', color: '#06b6d4' },
+          { label: 'Chat Sessions', value: stats?.chat_sessions ?? '—', icon: '💬', color: '#8b5cf6' },
         ].map((stat, idx) => (
           <div key={idx} className="glass-card" style={{ padding: 24 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -75,9 +95,9 @@ export default function DashboardPage() {
       <div className="glass-card" style={{ padding: 24 }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           {[
-            { name: 'API Server', status: 'Online', color: 'var(--accent-success)' },
+            { name: 'API Server', status: apiOnline === null ? 'Checking...' : apiOnline ? 'Online' : 'Offline', color: apiOnline === false ? 'var(--accent-danger)' : 'var(--accent-success)' },
             { name: 'Disease Model (RandomForest)', status: 'Ready', color: 'var(--accent-success)' },
-            { name: 'RAG Pipeline (FAISS + LLM)', status: 'Ready', color: 'var(--accent-success)' },
+            { name: 'RAG Pipeline (FAISS + Gemini)', status: 'Ready', color: 'var(--accent-success)' },
             { name: 'MLflow Tracking', status: 'Connected', color: 'var(--accent-success)' },
           ].map((service, idx) => (
             <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

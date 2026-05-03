@@ -44,16 +44,16 @@ class Settings(BaseSettings):
     # ── CORS ─────────────────────────────────────────────────────
     BACKEND_CORS_ORIGINS: list[str] = ["http://localhost:3000"]
 
-    # ── LLM / AI ─────────────────────────────────────────────────
-    HUGGINGFACE_API_KEY: str = ""
-    LLM_MODEL_NAME: str = "mistralai/Mistral-7B-Instruct-v0.3"
+    # ── LLM / AI (Google Gemini) ──────────────────────────────────
+    GOOGLE_API_KEY: str = ""
+    GEMINI_EMBEDDING_MODEL: str = "models/embedding-001"
+    GEMINI_LLM_MODEL: str = "gemini-2.5-flash"
 
     # ── MLflow ───────────────────────────────────────────────────
     MLFLOW_TRACKING_URI: str = "http://localhost:5000"
 
     # ── Vector Store ─────────────────────────────────────────────
     FAISS_INDEX_PATH: str = "ml/models/faiss_index"
-    EMBEDDING_MODEL_NAME: str = "all-MiniLM-L6-v2"
 
     @field_validator("BACKEND_CORS_ORIGINS", mode="before")
     @classmethod

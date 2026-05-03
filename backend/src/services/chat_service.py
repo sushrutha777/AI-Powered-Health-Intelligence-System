@@ -5,6 +5,7 @@ Orchestrates the RAG pipeline for message processing and
 handles chat session CRUD operations.
 """
 
+import asyncio
 import uuid
 from datetime import UTC, datetime
 
@@ -51,16 +52,21 @@ class ChatService:
         )
         self.db.add(user_msg)
 
-        # Generate RAG response using new Gemini pipeline
+        # Generate RAG response using Gemini pipeline
         try:
             from src.services.rag.gemini_medical_rag import ask_medical_question
-            # We don't have citations from the new pure langchain pipeline easily exposed in the return type, 
-            # so we'll just return the response string and empty sources for now.
-            response_text = ask_medical_question(input_data.message, "faiss_medical_index")
-            sources = []
+            # Run sync RAG pipeline in a thread to avoid blocking the event loop
+            response_text = await asyncio.to_thread(
+                ask_medical_question, input_data.message
+            )
+            sources: list[SourceCitation] = []
         except Exception as e:
             logger.error("gemini_rag_error", error=str(e))
-            response_text = "I am currently unable to process your request. Please ensure the Gemini API key is configured and the FAISS index exists."
+            response_text = (
+                "I am currently unable to process your request. "
+                "Please ensure the Gemini API key is configured "
+                "and the FAISS index exists."
+            )
             sources = []
 
         # Save assistant message

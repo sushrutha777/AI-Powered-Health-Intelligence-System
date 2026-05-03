@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   # ── PostgreSQL Database ────────────────────────────────────────
   db:
@@ -34,7 +32,7 @@ services:
       LOG_LEVEL: INFO
       BACKEND_CORS_ORIGINS: '["http://localhost:3000"]'
       MLFLOW_TRACKING_URI: http://mlflow:5000
-      HUGGINGFACE_API_KEY: ${HUGGINGFACE_API_KEY:-}
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY:-}
     ports:
       - "8000:8000"
     depends_on:

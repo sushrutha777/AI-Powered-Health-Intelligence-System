@@ -3,9 +3,11 @@ Drug recommendation service — NLP-based drug matching
 using TF-IDF vectorization and cosine similarity.
 """
 
+from pathlib import Path
 from typing import Any
 
 import numpy as np
+import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
@@ -18,8 +20,7 @@ from src.schemas.drug import (
 
 logger = get_logger(__name__)
 
-import pandas as pd
-from pathlib import Path
+
 
 _DRUG_DATABASE: list[dict[str, Any]] = []
 _vectorizer: TfidfVectorizer | None = None
@@ -42,24 +43,24 @@ def _initialize_engine() -> None:
     # Take a sample to keep memory usage low (e.g., 20000 rows)
     # df = df.sample(n=min(len(df), 20000), random_state=42).reset_index(drop=True)
     # The dataset might be large, but TF-IDF on 160k rows with max_features=5000 is usually fine.
-    
+
     # Pre-build our database structure
     _DRUG_DATABASE = []
     corpus = []
-    
+
     for _, row in df.iterrows():
         condition = str(row.get('condition', ''))
         review = str(row.get('review', ''))
         drug_name = str(row.get('drugName', ''))
         rating = row.get('rating', None)
         rating = float(rating) if not pd.isna(rating) else None
-        
+
         _DRUG_DATABASE.append({
             "name": drug_name,
             "condition": condition,
             "rating": rating,
             "review": review[:200] + "..." if len(review) > 200 else review,
-            "side_effects": [] # Dataset doesn't explicitly list side effects, we could extract from reviews but will leave empty for now
+            "side_effects": [],  # Not in dataset
         })
         corpus.append(f"{condition} {review}")
 
