@@ -5,6 +5,7 @@ Revises:
 Create Date: 2026-05-03
 """
 
+# pyrefly: ignore [missing-import]
 from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
@@ -32,7 +33,6 @@ def upgrade() -> None:
 
     # ── Predictions ──────────────────────────────────────────────
     prediction_type_enum = postgresql.ENUM("disease", name="predictiontype", create_type=True)
-    prediction_type_enum.create(op.get_bind(), checkfirst=True)
 
     op.create_table(
         "predictions",
@@ -59,7 +59,6 @@ def upgrade() -> None:
 
     # ── Chat Messages ────────────────────────────────────────────
     message_role_enum = postgresql.ENUM("user", "assistant", "system", name="messagerole", create_type=True)
-    message_role_enum.create(op.get_bind(), checkfirst=True)
 
     op.create_table(
         "chat_messages",

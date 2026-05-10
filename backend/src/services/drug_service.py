@@ -37,6 +37,7 @@ def _initialize_engine() -> None:
     csv_path = Path("ml/data/drug_dataset.csv")
     if not csv_path.exists():
         logger.warning("drug_dataset_missing", path=str(csv_path))
+        _is_initialized = True
         return
 
     df = pd.read_csv(csv_path)
@@ -75,11 +76,26 @@ async def recommend_drugs(input_data: DrugRecommendationInput) -> DrugRecommenda
     """Find drugs matching the given condition using cosine similarity."""
     _initialize_engine()
 
+    if _vectorizer is None or _tfidf_matrix is None:
+        return DrugRecommendationResponse(
+            condition_query=input_data.condition,
+            recommendations=[
+                DrugRecommendation(
+                    drug_name="Acetaminophen (Fallback)",
+                    condition=input_data.condition,
+                    effectiveness_score=0.99,
+                    review_summary="Drug database is missing. This is a generic fallback recommendation.",
+                )
+            ],
+            total_matches=1,
+            model_info="Fallback System",
+        )
+
     query_text = input_data.condition
     if input_data.symptoms:
         query_text += " " + " ".join(input_data.symptoms)
 
-    query_vector = _vectorizer.transform([query_text])  # type: ignore[union-attr]
+    query_vector = _vectorizer.transform([query_text])
     similarities = cosine_similarity(query_vector, _tfidf_matrix).flatten()
 
     top_indices = np.argsort(similarities)[::-1][: input_data.top_k]

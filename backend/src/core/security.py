@@ -7,14 +7,9 @@ hashing for the authentication system.
 
 from datetime import UTC, datetime, timedelta
 from typing import Any
-
 from jose import JWTError, jwt
-from passlib.context import CryptContext
-
+import bcrypt
 from src.core.config import get_settings
-
-# Bcrypt context for password hashing
-_pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 # ── Password Hashing ────────────────────────────────────────────────
@@ -22,12 +17,20 @@ _pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def hash_password(plain_password: str) -> str:
     """Hash a plaintext password using bcrypt."""
-    return str(_pwd_context.hash(plain_password))
+    # Bcrypt only supports up to 72 bytes. Truncate automatically.
+    password_bytes = plain_password[:72].encode('utf-8')
+    salt = bcrypt.gensalt()
+    return bcrypt.hashpw(password_bytes, salt).decode('utf-8')
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Verify a plaintext password against its bcrypt hash."""
-    return bool(_pwd_context.verify(plain_password, hashed_password))
+    password_bytes = plain_password[:72].encode('utf-8')
+    hashed_bytes = hashed_password.encode('utf-8')
+    try:
+        return bcrypt.checkpw(password_bytes, hashed_bytes)
+    except ValueError:
+        return False
 
 
 # ── JWT Token Management ────────────────────────────────────────────

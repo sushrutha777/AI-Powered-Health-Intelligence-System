@@ -74,14 +74,14 @@ export default function RegisterPage() {
 
           <div className="input-group">
             <label className="input-label" htmlFor="reg-password">Password</label>
-            <input id="reg-password" type="password" className="input-field" placeholder="Min 8 characters"
-              value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} />
+            <input id="reg-password" type="password" className="input-field" placeholder="Enter your password"
+              value={password} onChange={(e) => setPassword(e.target.value)} required />
           </div>
 
           <div className="input-group">
             <label className="input-label" htmlFor="reg-confirm">Confirm Password</label>
             <input id="reg-confirm" type="password" className="input-field" placeholder="••••••••"
-              value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required minLength={8} />
+              value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
           </div>
 
           <button type="submit" className="btn btn-primary btn-full" disabled={loading} style={{ marginTop: 8 }}>

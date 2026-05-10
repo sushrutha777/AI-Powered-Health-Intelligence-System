@@ -102,6 +102,7 @@ DISEASE_DESCRIPTIONS: dict[str, str] = {
     "Malaria": "A mosquito-borne infectious disease affecting humans.",
     "Dengue": "A mosquito-borne tropical disease caused by dengue virus.",
     "Typhoid": "A bacterial infection caused by Salmonella typhi.",
+    "Jaundice": "A condition where the skin and eyes turn yellow due to high bilirubin levels.",
 }
 
 # ── Model Holder ─────────────────────────────────────────────────────
@@ -154,6 +155,13 @@ async def load_disease_model() -> None:
 
             _model = joblib.load(local_path)
             _model_version = "local"
+            
+            # Load dynamic features if available
+            features_path = local_path.parent / "disease_feature_names.pkl"
+            if features_path.exists():
+                global SYMPTOM_LIST
+                SYMPTOM_LIST = joblib.load(features_path)
+                
             logger.info("disease_model_loaded", source="local")
         else:
             logger.warning(
@@ -181,31 +189,46 @@ async def predict_disease(
         # Real model inference
         probabilities = _model.predict_proba(features)[0]
         top_indices = np.argsort(probabilities)[::-1][:5]
+        
+        # Load local label encoder if using local fallback model
+        global DISEASE_LIST
+        if _model_version == "local":
+            import joblib
+            le_path = Path("ml/models/disease_label_encoder.pkl")
+            if le_path.exists():
+                le = joblib.load(le_path)
+                DISEASE_LIST = le.classes_.tolist()
 
         primary_idx = top_indices[0]
+        
+        # Guard against index out of bounds if model classes differ from DISEASE_LIST
+        primary_disease = DISEASE_LIST[primary_idx] if primary_idx < len(DISEASE_LIST) else "Unknown Disease"
+        
         primary = DiseasePredictionResult(
-            disease=DISEASE_LIST[primary_idx],
+            disease=primary_disease,
             confidence=float(probabilities[primary_idx]),
             description=DISEASE_DESCRIPTIONS.get(
-                DISEASE_LIST[primary_idx],
+                primary_disease,
                 "Consult a healthcare professional for more information.",
             ),
             precautions=[],
         )
 
-        differentials = [
-            DiseasePredictionResult(
-                disease=DISEASE_LIST[idx],
-                confidence=float(probabilities[idx]),
-                description=DISEASE_DESCRIPTIONS.get(
-                    DISEASE_LIST[idx],
-                    "Consult a healthcare professional for more information.",
-                ),
-                precautions=[],
-            )
-            for idx in top_indices[1:]
-            if probabilities[idx] > 0.05
-        ]
+        differentials = []
+        for idx in top_indices[1:]:
+            if probabilities[idx] > 0.05:
+                dis_name = DISEASE_LIST[idx] if idx < len(DISEASE_LIST) else "Unknown Disease"
+                differentials.append(
+                    DiseasePredictionResult(
+                        disease=dis_name,
+                        confidence=float(probabilities[idx]),
+                        description=DISEASE_DESCRIPTIONS.get(
+                            dis_name,
+                            "Consult a healthcare professional for more information.",
+                        ),
+                        precautions=[],
+                    )
+                )
     else:
         # Fallback — return placeholder response
         primary = DiseasePredictionResult(

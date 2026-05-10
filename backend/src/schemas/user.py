@@ -19,9 +19,8 @@ class UserCreate(BaseModel):
     email: EmailStr
     password: str = Field(
         ...,
-        min_length=8,
         max_length=128,
-        description="Password must be at least 8 characters",
+        description="Password",
     )
     full_name: str = Field(
         ...,

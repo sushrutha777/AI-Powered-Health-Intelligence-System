@@ -129,6 +129,11 @@ a:hover {
 
 .btn:hover::before { opacity: 1; }
 .btn:active { transform: scale(0.97); }
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
 
 .btn-primary {
   background: var(--gradient-primary);

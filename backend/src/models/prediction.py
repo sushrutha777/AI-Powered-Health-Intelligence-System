@@ -37,7 +37,7 @@ class Prediction(UUIDMixin, TimestampMixin, Base):
         index=True,
     )
     prediction_type: Mapped[PredictionType] = mapped_column(
-        Enum(PredictionType),
+        Enum(PredictionType, values_callable=lambda obj: [e.value for e in obj]),
         nullable=False,
         index=True,
     )
